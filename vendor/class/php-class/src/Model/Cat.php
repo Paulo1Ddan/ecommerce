@@ -28,6 +28,7 @@
             if($result){
                 $this->setData($result[0]);
                 $_SESSION['alert'] = "<script>alert('Categoria cadastrada com sucesso');</script>";
+                Cat::updateFile();
                 return true;
             }
         }
@@ -53,16 +54,26 @@
 
             if($result){
                 $_SESSION["alert"] = "<script>alert('Categoria deletada com sucesso')</script>";
+                Cat::updateFile();
                 return true;
             }else{
                 $_SESSION["alert"] = "<script>alert('Erro ao deletar categoria')</script>";
                 return false;
             }
+
         }
 
-        public function update()
+        public static function updateFile()
         {
-            
+            $categories = Cat::listAll();
+
+            $html = [];
+
+            foreach($categories as $row){
+                array_push($html, '<li><a href="/ecommerce/category/'. $row['idcategory'] .'">'. $row['descategory'].'</a></li>');
+
+                file_put_contents($_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR."ecommerce".DIRECTORY_SEPARATOR."views".DIRECTORY_SEPARATOR."site".DIRECTORY_SEPARATOR."categories-menu.html",implode("", $html));
+            }
         }
     }
 ?>

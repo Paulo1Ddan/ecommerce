@@ -14,6 +14,7 @@ use Class\Model\Cat;
 
 $app = AppFactory::create();
 
+//Site
 //Home page - GET
 $app->get('/ecommerce/', function (Request $request, Response $response, $args) {
     $page = new Page();
@@ -21,7 +22,26 @@ $app->get('/ecommerce/', function (Request $request, Response $response, $args) 
     return $response;
 });
 
+//Categorias
+$app->get("/ecommerce/category/{idcategory}", function (Request $request, Response $response, $args) {
+    $cat = new Cat();
 
+    $idcategory = $args['idcategory'];
+
+    $cat->get($idcategory);
+
+    $page = new Page();
+
+    $page->setTpl("category", array(
+        "category" => $cat->getData()
+    ));
+
+    return $response;
+
+});
+
+
+//Admin
 //Admin page - GET
 $app->get('/ecommerce/admin', function (Request $request, Response $response, $args) {
     if (!User::verifyLogin()) {
@@ -340,6 +360,8 @@ $app->get('/ecommerce/admin/categories', function(Request $request, Response $re
         "categories" => $cat
     ));
 
+    return $response;
+
 });
 
 //Create
@@ -357,6 +379,8 @@ $app->get('/ecommerce/admin/categories/create', function(Request $request, Respo
     }
 
     $page->setTpl("categories-create");
+
+    return $response;
 });
 $app->post('/ecommerce/admin/categories/create', function(Request $request, Response $response){
     if (!User::verifyLogin()) {
@@ -376,7 +400,7 @@ $app->post('/ecommerce/admin/categories/create', function(Request $request, Resp
         exit();
     }
 
-
+    return $response;
 
 });
 
@@ -400,7 +424,7 @@ $app->get("/ecommerce/admin/categories/{idcategory}/delete", function(Request $r
         header("Location: /ecommerce/admin/categories");
         exit();
     }
-
+    return $response;
 });
 
 //Update
@@ -426,6 +450,7 @@ $app->get("/ecommerce/admin/categories/{idcategory}", function(Request $request,
     $page->setTpl("categories-update", array(
         "category" => $cat->getData()
     ));
+    return $response;
 });
 $app->post("/ecommerce/admin/categories/{idcategory}", function(Request $request, Response $response, $args){
     if (!User::verifyLogin()) {
@@ -451,6 +476,7 @@ $app->post("/ecommerce/admin/categories/{idcategory}", function(Request $request
         header("Location: /ecommerce/admin/categories/$idcategory");
         exit();
     }
+    return $response;
 });
 
 $app->run();
