@@ -10,7 +10,7 @@
 
             $fieldName = substr($name, 3, strlen($name));
 
-            if($method === 'get') return $this->values[$fieldName];
+            if($method === 'get') return (isset($this->values[$fieldName]) ? $this->values[$fieldName] : NULL);
             if($method === 'set') $this->values[$fieldName] = $arguments[0];
         }
 

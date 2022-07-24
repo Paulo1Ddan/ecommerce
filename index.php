@@ -9,6 +9,7 @@ use Slim\Factory\AppFactory;
 use Class\Page;
 use Class\PageAdmin;
 use Class\Model\User;
+use Class\Model\Cat;
 
 
 $app = AppFactory::create();
@@ -316,6 +317,140 @@ $app->post('/ecommerce/admin/forgot/reset', function(Request $request, Response 
     }
 
     return $response;
+});
+
+
+//Categorias
+$app->get('/ecommerce/admin/categories', function(Request $request, Response $response) {
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    $page = new PageAdmin();
+
+    if(isset($_SESSION['alert'])){
+        echo $_SESSION['alert'];
+        unset($_SESSION['alert']);
+    }
+
+    $cat = Cat::listAll();
+
+    $page->setTpl("categories", array(
+        "categories" => $cat
+    ));
+
+});
+
+//Create
+$app->get('/ecommerce/admin/categories/create', function(Request $request, Response $response){
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    $page = new PageAdmin();
+
+    if(isset($_SESSION['alert'])){
+        echo $_SESSION['alert'];
+        unset($_SESSION['alert']);
+    }
+
+    $page->setTpl("categories-create");
+});
+$app->post('/ecommerce/admin/categories/create', function(Request $request, Response $response){
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    $cat = new Cat();
+
+    $cat->setData($_POST);
+
+    if($cat->save()){
+        header("Location: /ecommerce/admin/categories");
+        exit();
+    }else{
+        header("Location: /ecommerce/admin/categories/create");
+        exit();
+    }
+
+
+
+});
+
+//Delete
+$app->get("/ecommerce/admin/categories/{idcategory}/delete", function(Request $request, Response $response, $args){
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    $idcategory = $args['idcategory'];
+
+    $cat = new Cat();
+
+    $cat->get($idcategory);
+
+    if($cat->delete()){
+        header("Location: /ecommerce/admin/categories");
+        exit();
+    }else{
+        header("Location: /ecommerce/admin/categories");
+        exit();
+    }
+
+});
+
+//Update
+$app->get("/ecommerce/admin/categories/{idcategory}", function(Request $request, Response $response, $args){
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    $page = new PageAdmin();
+
+    if(isset($_SESSION['alert'])){
+        echo $_SESSION['alert'];
+        unset($_SESSION['alert']);
+    }
+
+    $idcategory = $args['idcategory'];
+
+    $cat = new Cat();
+
+    $cat->get($idcategory);
+
+    $page->setTpl("categories-update", array(
+        "category" => $cat->getData()
+    ));
+});
+$app->post("/ecommerce/admin/categories/{idcategory}", function(Request $request, Response $response, $args){
+    if (!User::verifyLogin()) {
+        header("Location: /ecommerce/");
+        echo "<script>location.href='/ecommerce/'</script>";
+        exit();
+    }
+    if(isset($_SESSION['alert'])){
+        echo $_SESSION['alert'];
+        unset($_SESSION['alert']);
+    }
+
+    $idcategory = $args['idcategory'];
+
+    $cat = new Cat();
+
+    $cat->get($idcategory);
+    $cat->setData($_POST);
+    if($cat->save()){
+        header("Location: /ecommerce/admin/categories");
+        exit();
+    }else{
+        header("Location: /ecommerce/admin/categories/$idcategory");
+        exit();
+    }
 });
 
 $app->run();

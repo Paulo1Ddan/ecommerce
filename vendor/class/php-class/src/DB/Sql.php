@@ -44,8 +44,12 @@
         {
             $stmt = $this->conn->prepare($rawQuery);
             $this->setParams($stmt, $params);
-            $stmt->execute();
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            if($stmt->execute()){
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            }else{
+                return false;
+            }
+            
         }
     }
 ?>
