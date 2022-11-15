@@ -9,6 +9,7 @@
     {
 
         const KEY = "HcodePhp7_cursos";
+        
         public static function login($login, $pass)
         {
             $sql = new Sql();

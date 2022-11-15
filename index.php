@@ -8,7 +8,11 @@
     $app = AppFactory::create();
 
     //Stie
+    require_once("routes/site/functions.php");
+
+    //Stie
     require_once("routes/site/site.php");
+    
     //Site-category
     require_once("routes/site/category.php");
 

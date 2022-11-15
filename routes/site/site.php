@@ -8,12 +8,17 @@
     use Class\PageAdmin;
     use Class\Model\User;
     use Class\Model\Cat;
+    use Class\Model\Product;
 
     //Site
     //Home page - GET
     $app->get('/ecommerce/', function (Request $request, Response $response, $args) {
+
+        $products = Product::listAll();
+
         $page = new Page();
-        $page->setTpl('index');
+
+        $page->setTpl('index',["products" => Product::checkList($products)]);
         return $response;
     });
 
