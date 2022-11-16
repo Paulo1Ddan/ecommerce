@@ -94,6 +94,25 @@
             }
         }
 
+        public function getProductsPage($page = 1, $itens = 2)
+        {
+            $start = ($page-1)*$itens;
+
+            $sql = new Sql();
+            $resultProduct = $sql->select("SELECT * FROM tb_products a INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct INNER JOIN tb_categories c ON c.idcategory = b.idcategory WHERE c.idcategory = :idcategory LIMIT $start,$itens", array(
+                ":idcategory" => $this->getidcategory()
+            ));
+            $resultTotal = $sql->select("SELECT COUNT(*) AS nrtotal FROM tb_products a INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct INNER JOIN tb_categories c ON c.idcategory = b.idcategory WHERE c.idcategory = :idcategory", array(
+                ":idcategory" => $this->getidcategory()
+            ));
+
+            return array(
+                "data" => Product::checkList($resultProduct),
+                "total" => $resultTotal[0]['nrtotal'],
+                "pages" => ceil((int)$resultTotal[0]['nrtotal']/$itens)
+            );
+        }
+
         public function addProduct(Product $product)
         {
             $sql = new Sql();

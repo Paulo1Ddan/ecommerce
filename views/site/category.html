@@ -38,21 +38,28 @@
                 <div class="product-pagination text-center">
                     <nav>
                         <ul class="pagination">
+                        {if="$atual > 1"}
                         <li>
-                            <a href="#" aria-label="Previous">
+                            <a href="{$linkprev}" aria-label="Previous">
                             <span aria-hidden="true">«</span>
                             </a>
                         </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
+                        {else}
+
+                        {/if}
+                        {loop="$pages"}
+                        <li><a href="{$value.link}">{$value.page}</a></li>
+                        {/loop}
+                        {if="$atual < $total"}
                         <li>
-                            <a href="#" aria-label="Next">
+                            <a href="{$linknext}" aria-label="Next">
                             <span aria-hidden="true">»</span>
                             </a>
                         </li>
+                        {else}
+
+                        {/if}
+
                         </ul>
                     </nav>                        
                 </div>

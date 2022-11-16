@@ -17,11 +17,29 @@
 
         $cat->get($idcategory);
 
-        $page = new Page();
+        $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
 
-        $page->setTpl("category", array(
+        $pagination = $cat->getProductsPage($page, 8);
+
+        $pagesite = new Page();
+
+        $pages = [];
+
+        for($i= 1; $i<=$pagination['pages'];$i++){
+            array_push($pages, [
+                "link" => "/ecommerce/category/$idcategory?page=$i",
+                "page" => "$i"
+            ]);
+        }
+
+        $pagesite->setTpl("category", array(
             "category" => $cat->getData(),
-            "products" => Product::checkList($cat->getProducts())
+            "products" => $pagination['data'],
+            "pages" => $pages,
+            "atual" => $page,
+            "total" => $pagination['pages'],
+            "linknext" => "/ecommerce/category/$idcategory?page=".$page+1,
+            "linkprev" => "/ecommerce/category/$idcategory?page=".$page-1,
         ));
 
         return $response;

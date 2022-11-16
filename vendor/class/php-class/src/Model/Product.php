@@ -27,7 +27,6 @@
             return $list;
         }
 
-
         public function save()
         {
             $sql = new Sql();
@@ -137,6 +136,27 @@
 
             return $values;
             
+        }
+
+        public function getFromUrl($url)
+        {
+            $sql = new Sql();
+
+            $rows = $sql->select("SELECT * FROM `tb_products` WHERE desurl = :url", array(
+                ":url" => $url
+            ));
+
+            $this->setData($rows[0]);
+        }
+
+        public function getCategories()
+        {
+
+            $sql = new Sql();
+            return $sql->select("SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct", array(
+                ":idproduct" => $this->getidproduct()
+            ));
+
         }
     }
 ?>

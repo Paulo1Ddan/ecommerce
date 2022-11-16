@@ -7,14 +7,14 @@
 
     $app = AppFactory::create();
 
-    //Stie
+    //Functions
     require_once("routes/site/functions.php");
-
-    //Stie
+    //Site
     require_once("routes/site/site.php");
-    
     //Site-category
     require_once("routes/site/category.php");
+    //Site-products
+    require_once("routes/site/products.php");
 
     //Admin
     require_once("routes/admin/admin.php");
