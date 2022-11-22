@@ -15,6 +15,8 @@
     require_once("routes/site/category.php");
     //Site-products
     require_once("routes/site/products.php");
+    //Site-Cart
+    require_once("routes/site/cart.php");
 
     //Admin
     require_once("routes/admin/admin.php");

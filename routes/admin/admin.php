@@ -23,11 +23,6 @@
 
     //Admin Login page - GET
     $app->get('/ecommerce/admin/login', function (Request $request, Response $response, $args) {
-        if (User::verifyLogin()) {
-            header("Location: /ecommerce/");
-            echo "<script>location.href='/ecommerce/admin'</script>";
-            exit;
-        }
         $page = new PageAdmin(array(
             "header" => false,
             'footer' => false

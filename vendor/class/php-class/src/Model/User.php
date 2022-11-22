@@ -8,8 +8,38 @@
     class User extends Model
     {
 
+        const SESSION = "User";
         const KEY = "HcodePhp7_cursos";
         
+        public static function getFromSession()
+        {
+            $user = new User();
+
+            if(isset($_SESSION[User::SESSION]) && $_SESSION[User::SESSION]['iduser'] > 0){
+
+                $user->setData();
+            }
+
+            return $user;
+        }
+
+        public static function checkLogin($inadmin = true)
+        {
+            if(!isset($_SESSION[User::SESSION]) || !$_SESSION[User::SESSION] || !$_SESSION[User::SESSION]['iduser'] > 0){
+                // Não está logado
+                return false;
+            }else{
+                if($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin']){
+                    return true;
+                }else if($inadmin === false){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+
         public static function login($login, $pass)
         {
             $sql = new Sql();
@@ -23,8 +53,7 @@
                     $user = new User();
                     $user->setData($data);
 
-                    $_SESSION['user'] = $user->getData();
-                    $_SESSION['logado'] = true;
+                    $_SESSION[User::SESSION] = $user->getData();
                     return true;
                 }else{
                     echo "<script>alert('Usuario ou senha incorretas!'); history.back();</script>";
@@ -35,22 +64,20 @@
                
             }
         }
-        public static function verifyLogin()
+        public static function verifyLogin($inadmin = true)
         {
-            if(isset($_SESSION['logado']) && isset($_SESSION['user']) && $_SESSION['user']['inadmin'] == 1){
-                return true;
-            }else{
+            if(!isset($_SESSION[User::SESSION]) || !$_SESSION[User::SESSION] || !$_SESSION[User::SESSION]['iduser'] > 0 || (bool)$_SESSION[User::SESSION]['inadmin'] !== $inadmin){
                 return false;
+            }else{
+                return true;
             }
         }
 
         public static function logout()
         {
-            unset($_SESSION['user']);
+            unset($_SESSION[User::SESSION]);
             unset($_SESSION['logado']);
-            if(!isset($_SESSION['user']) && !isset($_SESSION['logado'])){
-                return true;
-            }
+            return true;
         }
 
         public static function listAll()
